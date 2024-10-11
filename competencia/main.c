@@ -44,6 +44,7 @@ pthread_mutex_t mutex;
 
 sem_t ensamblando_auto; // Semáforo para controlar ensamblaje
 FILE* archivo;
+int p[2]; //Para comunicacion entre procesos
 
 // Función recursiva para ensamblar cada parte del auto
 void ensamblar_parte(Automovil* auto_ensamblado, int parte) {
@@ -127,7 +128,7 @@ void swapToDisk(const RamItem item) {
 
 void *addToRam(void *arg) {
     RamItem *item = (RamItem*)arg;
-    printf("guardando en memo: %d \n",item->id);
+    printf("Guardando en memo: %d \n",item->id);
     int agregado = 0;
     for(int i = 0; i < MAX_RAM_SIZE; i++) {
         if(ram[i].id == -1) { // esta vacio y podemos asignar
@@ -145,10 +146,16 @@ void *addToRam(void *arg) {
         ram[0] = *item;
         pthread_mutex_unlock(&mutex);
     }
+    char msg[255];
+    sprintf(msg,"Auto ID %d guardado en la RAM\n",item->id);
+    write(p[1],msg,strlen(msg)+1); // Para enviar un mensaje por la tuberia
+
     return NULL;
 }
 
 int main() {
+    pid_t pid;
+    char buffer[255];
     int num_autos;
 
     // Solicitar el número de vehículos a ensamblar
@@ -167,6 +174,12 @@ int main() {
     pthread_t hilos[num_autos];
     Automovil autos[num_autos];
 
+    //Crear la tuberia
+    if (pipe(p)==-1) {
+        perror("Error al crear la tuberia");
+        return 1;
+    }
+
     // Recursión para crear los hilos (sin ciclo)
     void crear_hilo(int i) {
         if (i >= num_autos) {
@@ -179,6 +192,15 @@ int main() {
     }
 
     crear_hilo(0); // Iniciar creación de hilos con recursividad
+
+    pthread_t lec_tuberia;
+    void *leer_tuberia(void *arg) {
+        while (read(p[0],buffer,sizeof(buffer))>0) {
+            printf("Guardado con exito:  %s\n",buffer);
+        }
+        return NULL;
+    }
+    pthread_create(&lec_tuberia, NULL, leer_tuberia, NULL);
 
     // Esperar a que todos los hilos terminen (recursivamente)
     void esperar_hilos(int i) {
@@ -197,8 +219,7 @@ int main() {
 
     printf("Proceso de ensamblaje completado. Revisa el archivo 'reporte.txt'.\n");
     // simulamos la ram
-   
-    printf("Entro a guardar en memoria");
+
 
     (&mutex,NULL);
 
@@ -220,7 +241,9 @@ int main() {
     for(int k = 0; k < num_autos; k++) {
         pthread_join(ramThreads[k], NULL);
     }
-
+    //cerrar la tuberia
+    close(p[0]);
+    close(p[1]);
     pthread_mutex_destroy(&mutex);
 
 
