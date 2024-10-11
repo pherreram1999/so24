@@ -1,0 +1,3 @@
+/home/sistemas/Documentos/enemy/cmake-build-debug/CMakeFiles/enemy.dir
+/home/sistemas/Documentos/enemy/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sistemas/Documentos/enemy/cmake-build-debug/CMakeFiles/rebuild_cache.dir
