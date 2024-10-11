@@ -197,17 +197,7 @@ int main() {
 
     printf("Proceso de ensamblaje completado. Revisa el archivo 'reporte.txt'.\n");
     // simulamos la ram
-    pid_t pid;
-    int t[2],bytes;//0 para leer y 1 para escribir
-    char buffer[256];
-    pipe(t);
-    if(pid=fork())==0){
-        close(t[0]);
-        while (bytes=read(t[1],buffer,256)) >0){
-            write(t[1],buffer,bytes);
-            close(t[1]);
-    }
-
+   
     printf("Entro a guardar en memoria");
 
     (&mutex,NULL);
