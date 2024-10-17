@@ -6,69 +6,75 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-sem_t puente;
-pthread_mutex_t mutex;
+pthread_mutex_t mutex=PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond=PTHREAD_COND_INITIALIZER;
+
 int auto_puente = 0;
 int sentido_actual=0;
-int auto_sentido1, auto_sentido2;
 
-void *autoenpuente(void *arg) {
-  int sentido=*(int *)arg;
-  int total_vehiculos;
-  if (sentido == 1) {
-    total_vehiculos = auto_sentido1;
-  } else {
-    total_vehiculos = auto_sentido2;
+typedef struct {
+  int id;
+  int sentido;
+}Auto;
+
+void *Autofunc(void *arg) {
+  Auto *a = (Auto *)arg;
+  usleep(rand()%20000);
+  pthread_mutex_lock(&mutex);
+  while(auto_puente>0 && sentido_actual!=a->sentido) {
+    pthread_cond_wait(&cond,&mutex);
   }
-
-  for (int i = 0; i < total_vehiculos; i++) {
-    usleep(rand()%20000);
-    while(1){
-      pthread_mutex_lock(&mutex);
-      if (auto_puente==0 || sentido_actual==sentido){
-        if(auto_puente==0){
-          sentido_actual=sentido;
-        }
-        auto_puente++;
-        printf("Auto %d entrando al puente en sentido %d. Total en puente: %d\n", i+1, sentido, auto_puente);
-        pthread_mutex_unlock(&mutex);
-        break;
-      }
-      pthread_mutex_unlock(&mutex);
-      usleep(1000);
-    }
-    sleep(1);
-    pthread_mutex_lock(&mutex);
-    auto_puente--;
-    printf("Auto %d saliendo del puente en sentido %d. Autos restantes en el puente: %d\n",i+1, sentido,auto_puente);
+  if(auto_puente>0) {
+    sentido_actual=a->sentido;
+  }
+  auto_puente++;
+  printf("Auto %d entrando al puente en sentido %d. Total en puente: %d\n", a->id, a->sentido, auto_puente);
+  pthread_mutex_unlock(&mutex);
+  sleep(1);
+  pthread_mutex_lock(&mutex);
+  auto_puente--;
+  printf("Auto %d saliendo del puente en sentido %d. Autos restantes en el puente: %d\n",a->id, a->sentido,auto_puente);
     if(auto_puente==0){
       sentido_actual=0;
+      pthread_cond_broadcast(&cond);
     }
     pthread_mutex_unlock(&mutex);
-  }
+  free(a);
   return NULL;
 }
 
 int main() {
-  pthread_mutex_init(&mutex, NULL);
   srand(time(NULL));
-  pthread_t hilos[2];
+
+  int auto_sentido1,auto_sentido2;
+
   printf("Ingrese el numero de vehiculos para el sentido 1: \n");
   scanf("%d", &auto_sentido1);
   printf("Ingrese el numero de autos en el sentido 2: \n");
   scanf("%d", &auto_sentido2);
+  int total_autos=auto_sentido1+auto_sentido2;
 
-  int *sentido1 = (int *)malloc(sizeof(int));
-  *sentido1=1;
-  pthread_create(&hilos[0], NULL, autoenpuente, sentido1);
-  int *sentido2 = (int *)malloc(sizeof(int));
-  *sentido2=2;
-  pthread_create(&hilos[1],NULL,autoenpuente,sentido2);
-  pthread_join(hilos[0],NULL);
-  pthread_join(hilos[1],NULL);
-  free(sentido1);
-  free(sentido2);
+  pthread_t *hilos=malloc(total_autos*sizeof(pthread_t));
+
+  for(int i=0;i<auto_sentido1;i++) {
+    Auto *a = (Auto *)malloc(sizeof(Auto));
+    a->id=i+1;
+    a->sentido=1;
+    pthread_create(&hilos[auto_sentido1], NULL, Autofunc, a);
+  }
+  for(int i=0;i<auto_sentido2;i++) {
+    Auto *a = (Auto *)malloc(sizeof(Auto));
+    a->id=i+1;
+    a->sentido=2;
+    pthread_create(&hilos[auto_sentido2], NULL, Autofunc, a);
+  }
+  for(int i=0;i<total_autos;i++) {
+    pthread_join(hilos[i],NULL);
+  }
+
+  free(hilos);
   pthread_mutex_destroy(&mutex);
+  pthread_cond_destroy(&cond);
   return 0;
 }
 //
