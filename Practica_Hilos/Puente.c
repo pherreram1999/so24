@@ -68,8 +68,7 @@ int main() {
   pthread_join(hilos[1],NULL);
   free(sentido1);
   free(sentido2);
-  return 0;
-
   pthread_mutex_destroy(&mutex);
+  return 0;
 }
 //
