@@ -100,18 +100,24 @@ Frame* findLFUFrame(FrameList *frameList) {
 	return lfuFrame;
 }
 
-        // Función para simular la carga de una página a memoria física utilizando The Optimal Page Replacement Algorithm
+// Función para simular la carga de una página a memoria física utilizando The Optimal Page Replacement Algorithm
         void loadPage(FrameList *frameList, int page, int futureAccess[]) {
-            Frame *frame = createFrame();
-            frame->page = page;
-            frame->valid = true;
+            Frame *frame= findFrame(frameList, page);
+    if (frame != NULL) {
+        frame->frequency++;
+        printf("Pagina %d encontrada frecuencia %d\n",frame->page,frame->frequency);
+    }
+    Frame *newFrame = createFrame();
+    newFrame->page = page;
+    newFrame -> valid = true;
+    newFrame->frequency =1;
 
-            // Si la lista de frames ya está llena, determinar la página óptima a reemplazar
+            // Si la lista de frames ya está llena, determinar la página menos usada frecuentemente
             if (frameList->numFrames == NUM_FRAMES) {
-                Frame *optimalFrame = NULL;
-                int farthest = -1;
+                Frame *lfuFrame = findFrame(frameList, page);
+                removeFrame(frameList, lfuFrame);
 
-                // Buscar el frame que contiene la página que no será utilizada por más tiempo
+                /*/ Buscar el frame que contiene la página que no será utilizada por más tiempo
                 for (int i = 0; i < NUM_FRAMES; ++i) {
                     Frame *current = frameList->head;
                     int j = 0;
@@ -120,23 +126,17 @@ Frame* findLFUFrame(FrameList *frameList) {
                         ++j;
                     }
                     if (current == NULL || current->page == -1) {
-                        optimalFrame = current;
+                        lfuFrame = current;
                         break;
                     }
                     if (j > farthest) {
                         farthest = j;
-                        optimalFrame = current;
+                        lfuFrame = current;
                     }
+                    /*/
                 }
-
-                // Remover el frame óptimo encontrado
-                if (optimalFrame != NULL) {
-                    removeFrame(frameList, optimalFrame);
-                }
-            }
-
             // Insertar el nuevo frame en la lista de frames
-            insertFrame(frameList, frame);
+            insertFrame(frameList, newFrame);
         }
 
         // Función para imprimir el estado actual de la lista de frames (solo para fines de depuración)
@@ -144,7 +144,7 @@ Frame* findLFUFrame(FrameList *frameList) {
             printf("Estado actual de la lista de frames:\n");
             Frame *current = frameList->head;
             while (current != NULL) {
-                printf("Página: %d, ", current->page);
+                printf("Página: %d, Uso: %d, ", current->page,current->frequency);
                 if (current->valid) {
                     printf("Estado: Ocupado\n");
                 } else {

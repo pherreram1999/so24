@@ -1,0 +1,3 @@
+/home/sistemas/Documentos/sistemas_operativos/OPR_LFU/cmake-build-debug/CMakeFiles/opr_lfu.dir
+/home/sistemas/Documentos/sistemas_operativos/OPR_LFU/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sistemas/Documentos/sistemas_operativos/OPR_LFU/cmake-build-debug/CMakeFiles/rebuild_cache.dir
