@@ -8,6 +8,7 @@
 // Estructura para un frame de página en memoria física
 typedef struct Frame {
     int page;           // Número de página almacenada en el frame (valor -1 si está vacío)
+	int frequency;      //Para el contador de frecuencia de accesos
     bool valid;         // Indica si el frame está ocupado (true) o vacío (false)
     struct Frame *prev; // Puntero al frame previo (para lista doblemente enlazada)
     struct Frame *next; // Puntero al frame siguiente (para lista doblemente enlazada)
@@ -25,6 +26,7 @@ Frame* createFrame() {
     Frame *frame = (Frame *)malloc(sizeof(Frame));
     if (frame != NULL) {
         frame->page = -1;   // Inicialmente no hay página asignada
+		frame->frequency = 0;
         frame->valid = false;
         frame->prev = NULL;
         frame->next = NULL;
@@ -85,6 +87,18 @@ void insertFrame(FrameList *frameList, Frame *frame) {
             }
             return NULL;
         }
+//Funcion para encontrar el que tiene menos frecuencia
+Frame* findLFUFrame(FrameList *frameList) {
+	Frame *lfuFrame = frameList->head;
+	Frame *current = frameList->head;
+	while (current != NULL) {
+		if (current->frequency == frameList->numFrames) {
+			lfuFrame = current;
+		}
+	current = current->next;
+	}
+	return lfuFrame;
+}
 
         // Función para simular la carga de una página a memoria física utilizando The Optimal Page Replacement Algorithm
         void loadPage(FrameList *frameList, int page, int futureAccess[]) {
