@@ -4,5 +4,4 @@ project(so24 C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable(so24
-        Puente.c
-        ../OPR_LFU/main.c)
+        Puente.c)
