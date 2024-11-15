@@ -1,0 +1,1 @@
+"Programa.c" tiene como finalidad que al ser ejecutado, muestre el archivo "Controladores de Dispositivos de Entrada y Salida.txt" dentro de la carpeta "Investigacion 3"

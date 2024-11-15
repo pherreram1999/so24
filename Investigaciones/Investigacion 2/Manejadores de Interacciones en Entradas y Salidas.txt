@@ -1,0 +1,22 @@
+Manejadores de Interacciones en Entradas y Salidas
+Los componentes y mecanismos del sistema operativo que gestionan la comunicación entre el procesador y los dispositivos de entrada y salida (E/S). Para comprender mejor este concepto, consideremos algunos puntos clave:
+
+Controladores de Dispositivo.
+Actúan como intermediarios entre el sistema operativo y el hardware del dispositivo. Traducen comandos de alto nivel, como "leer bloque 123", a instrucciones específicas que el hardware del dispositivo puede entender.
+
+Rutinas de Manejo de Interrupciones. 
+Responden a las señales generadas por los dispositivos de E/S, indicando eventos como la finalización de una operación o la disponibilidad de datos. Permiten al sistema operativo reaccionar a los eventos de E/S de manera eficiente.
+
+Protocolos de Negociación.
+Establecen la comunicación entre el procesador y la controladora del dispositivo. Un ejemplo simple utiliza bits de estado y comando para coordinar la transferencia de datos, indicando cuándo la controladora está ocupada o lista para recibir un nuevo comando.
+
+Mecanismos de Sondeo e Interrupciones.  
+El sondeo implica que el procesador revise constantemente el estado de la controladora, mientras que las interrupciones permiten a la controladora notificar al procesador cuando necesita atención, liberándose para otras tareas.
+
+Acceso Directo a Memoria (DMA).
+Permite a las controladoras de dispositivos transferir datos directamente a la memoria principal sin la intervención del procesador, agilizando las transferencias de grandes volúmenes de datos.
+
+E/S Programada.
+En este caso, el procesador se encarga de enviar comandos y datos a la controladora, y de recibir los datos de la controladora. Es más simple de implementar, pero puede ser menos eficiente que DMA para grandes transferencias de datos. En resumen, los "manejadores de interacciones" son un conjunto de componentes y mecanismos que trabajan en conjunto para asegurar la correcta comunicación entre el procesador y los dispositivos de E/S.  Estos mecanismos son cruciales para el funcionamiento del sistema operativo y la interacción del usuario con la computadora.
+
+

@@ -1,0 +1,21 @@
+Controladores de Dispositivos de Entrada y Salida
+Los controladores de dispositivos de entrada y salida (E/S), tambien conocidos como controladores de dispositivo, son componentes esenciales del sistema operativo que permiten la comunicacion entre el software y el hardware de E/S. Actuan como traductores, convirtiendo comandos de alto nivel del sistema operativo en instrucciones de bajo nivel especificas para cada dispositivo.
+
+Funciones Clave de los Controladores de Dispositivo.
+
+*Abstraccion del Hardware: Los controladores ocultan la complejidad del hardware de E/S, presentando una interfaz uniforme al sistema operativo y a las aplicaciones. Esto simplifica la programacion y permite conectar nuevos dispositivos sin necesidad de modificar el sistema operativo.
+
+*Manejo de Interrupciones:  Responden a las interrupciones generadas por los dispositivos de E/S, indicando eventos como la finalizacion de una operacion o la disponibilidad de datos. Permiten al sistema operativo reaccionar a estos eventos de manera eficiente.
+
+*Transferencia de Datos: Gestionan la transferencia de datos entre el dispositivo y la memoria principal, utilizando mecanismos como la E/S programada o el acceso directo a memoria (DMA).
+
+*Control de Flujo: Regulan la velocidad de transferencia de datos para evitar que el dispositivo o el sistema se sobrecarguen.
+
+Diversidad de Dispositivos y Controladores
+Los dispositivos de E/S pueden variar ampliamente en sus caracteristicas, como la velocidad de operacion, el modo de acceso (secuencial o aleatorio) y la direccion de transferencia de datos (lectura-escritura, solo lectura o solo escritura). Los controladores de dispositivo deben ser especificos para cada tipo de dispositivo, encapsulando sus peculiaridades y presentando una interfaz uniforme al sistema operativo.
+
+STREAMS en UNIX
+El sistema operativo UNIX System V implementa un mecanismo llamado STREAMS que permite a las aplicaciones construir dinamicamente pipelines de codigo de controladores de dispositivo. Un stream es una conexion full-duplex entre un controlador de dispositivo y un proceso, compuesta por una cabecera de stream, un extremo de controlador y modulos stream intermedios. Los modulos stream proporcionan funcionalidad de procesamiento y se insertan en el stream mediante la llamada al sistema ioctl().
+
+Importancia de los Controladores
+Los controladores de dispositivos son cruciales para el funcionamiento del sistema operativo y la interaccion del usuario con la computadora. Permiten la comunicacion fluida entre el software y el hardware, haciendo que los dispositivos de E/S sean accesibles y faciles de usar.
