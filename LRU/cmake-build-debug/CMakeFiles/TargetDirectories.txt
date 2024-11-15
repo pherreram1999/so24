@@ -1,0 +1,3 @@
+/home/sistemas/Documentos/sistemas_operativos/LRU/cmake-build-debug/CMakeFiles/LRU.dir
+/home/sistemas/Documentos/sistemas_operativos/LRU/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/sistemas/Documentos/sistemas_operativos/LRU/cmake-build-debug/CMakeFiles/rebuild_cache.dir

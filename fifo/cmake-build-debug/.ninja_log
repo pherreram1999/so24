@@ -1,0 +1,5 @@
+# ninja log v6
+1	47	1729113806546414409	CMakeFiles/fifo_lru.dir/main.c.o	fd994adc7305f90f
+47	79	1729113806592432819	fifo_lru	672abe5fc795bdce
+1	65	1729115234964952429	CMakeFiles/fifo_lru.dir/fifo.c.o	35e3fb0ebb0615db
+3	73	1729115234966952726	CMakeFiles/fifo_lru.dir/lru.c.o	b2c4944dbcf452c9
